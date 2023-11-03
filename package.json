@@ -1,0 +1,16 @@
+{
+  "name": "postgresql",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "psql": "docker run --rm -it --net=host postgres psql -h localhost -p 5432 -U $POSTGRES_USER -d $POSTGRES_DB",
+    "run": "docker run --name postgres-run -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -d postgres",
+    "run-data": "docker run --name postgres-run-data -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_DB=$POSTGRES_DB -d -v ./dbdata:/var/lib/postgresql/data postgres",
+    "run-port": "docker run --name postgres-run-port -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_DB=$POSTGRES_DB -d -v ./dbdata:/var/lib/postgresql/data -p 5432:5432 postgres",
+    "compose": "docker-compose -f docker-compose.yml up -d"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
