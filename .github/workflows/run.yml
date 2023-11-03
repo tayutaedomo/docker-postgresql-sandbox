@@ -23,4 +23,4 @@ jobs:
         run: docker-compose -f docker-compose.yml up -d
 
       - name: Run psql
-        run: docker-compose run -f docker-compose.yml --rm --entrypoint psql psql -h db -U \"$POSTGRES_USER" -d \"$POSTGRES_DB\" -c \"SELECT NOW();\"
+        run: docker-compose run -f docker-compose.yml --rm --entrypoint psql psql -h db -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT NOW();"
