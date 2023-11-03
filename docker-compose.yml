@@ -13,3 +13,16 @@ services:
     ports:
       - "5432:5432"
     restart: unless-stopped
+
+  psql:
+    image: postgres
+    container_name: psql
+    depends_on:
+      - db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    stdin_open: true
+    tty: true
