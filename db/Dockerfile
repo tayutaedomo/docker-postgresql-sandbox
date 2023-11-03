@@ -13,3 +13,8 @@ ENV LANG ja_JP.utf8
 
 # タイムゾーンを設定
 ENV TZ=Asia/Tokyo
+
+# ローカルの設定ファイルをイメージに追加
+COPY ./postgresql.conf /etc/postgresql/postgresql.conf
+RUN chown postgres:postgres /etc/postgresql/postgresql.conf
+RUN chmod 0600 /etc/postgresql/postgresql.conf
