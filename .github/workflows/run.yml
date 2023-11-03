@@ -1,0 +1,26 @@
+name: docker-compose run
+
+on:
+  pull_request:
+    branches: ["main"]
+
+env:
+  POSTGRES_USER: guest
+  POSTGRES_PASSWORD: guest
+  PGPASSWORD: guest
+  POSTGRES_DB: example
+
+jobs:
+  compose-run:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Up docker-compose
+        run: docker-compose -f docker-compose.yml up -d
+
+      - name: Run psql
+        run: docker-compose run -f docker-compose.yml --rm --entrypoint psql psql -h db -U \"$POSTGRES_USER" -d \"$POSTGRES_DB\" -c \"SELECT NOW();\"
