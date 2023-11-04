@@ -23,7 +23,7 @@ jobs:
         run: chmod -R 777 ./dblog
 
       - name: Up docker-compose
-        run: docker-compose -f docker-compose.yml up -d
+        run: docker-compose -f docker-compose-db.yml -f docker-compose-psql.yml up -d
 
       - name: Run psql
-        run: docker-compose -f docker-compose.yml run --rm --entrypoint psql psql -h db -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT NOW();"
+        run: docker-compose -f docker-compose.yml -f docker-compose-psql.yml run --rm --entrypoint psql psql -h db -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT NOW();"

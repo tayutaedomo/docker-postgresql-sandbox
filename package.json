@@ -8,9 +8,14 @@
     "run": "docker run --name postgres-run -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -d postgres",
     "run-data": "docker run --name postgres-run-data -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_DB=$POSTGRES_DB -d -v ./dbdata:/var/lib/postgresql/data postgres",
     "run-port": "docker run --name postgres-run-port -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_DB=$POSTGRES_DB -d -v ./dbdata:/var/lib/postgresql/data -p 5432:5432 postgres",
-    "compose": "docker-compose -f docker-compose.yml up -d",
-    "compose-up-db": "docker-compose -f docker-compose.yml up db -d",
-    "compose-run-psql": "docker-compose run --rm --entrypoint psql psql -h db -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\" -c \"SELECT NOW();\""
+    "compose": "docker-compose up -d",
+    "compose-down": "docker-compose down",
+    "compose-up-db": "docker-compose up db -d",
+    "compose-run-psql": "docker-compose run --rm --entrypoint psql psql -h db -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\" -c \"SELECT NOW();\"",
+    "compose-2": "docker-compose -f docker-compose-db.yml -f docker-compose-psql.yml up -d",
+    "compose-down-2": "docker-compose -f docker-compose-db.yml -f docker-compose-psql.yml down",
+    "compose-up-db-2": "docker-compose -f docker-compose-db.yml up -d",
+    "compose-run-psql-2": "docker-compose -f docker-compose-db.yml -f docker-compose-psql.yml run --rm --entrypoint psql psql -h db -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\" -c \"SELECT NOW();\""
   },
   "keywords": [],
   "author": "",
