@@ -43,6 +43,8 @@ jobs:
           key: ${{ runner.os }}-docker-layers-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-docker-layers-
+      - name: Create Docker layers directory
+        run: mkdir -p /tmp/.docker-layers/
       - name: Load Docker image from cache
         run: |
           if [ -f /tmp/.docker-layers/postgres-compose-db.tar ]; then
