@@ -19,14 +19,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set permissions for dblog directory
+      - name: Set permissions for log directory
         run: chmod -R 777 ./dblog
 
       - name: Up docker-compose
         run: docker-compose -f docker-compose.yml up -d
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
 
       - name: Run psql
         run: docker-compose -f docker-compose.yml run --rm --entrypoint psql psql -h db -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT NOW();"
