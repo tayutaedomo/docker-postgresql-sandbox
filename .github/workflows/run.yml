@@ -22,12 +22,8 @@ jobs:
       - name: Up docker-compose
         run: docker-compose -f docker-compose.yml up -d
 
-      - name: Wait for PostgreSQL to become available
-        run: |
-          until docker-compose -f docker-compose.yml exec db pg_isready -U "$POSTGRES_USER"; do
-            echo "Waiting for PostgreSQL..."
-            sleep 1
-          done
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
 
       - name: Run psql
         run: docker-compose -f docker-compose.yml run --rm --entrypoint psql psql -h db -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT NOW();"
