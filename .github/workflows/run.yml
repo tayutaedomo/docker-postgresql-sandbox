@@ -19,6 +19,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Set permissions for dblog directory
+        run: chmod -R 777 ./dblog
+
       - name: Up docker-compose
         run: docker-compose -f docker-compose.yml up -d
 
