@@ -22,20 +22,38 @@ jobs:
       - name: Set permissions for log directory
         run: chmod -R 777 ./dblog
 
+      # - name: Cache Docker layers
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: /tmp/.docker-layers/
+      #     key: ${{ runner.os }}-docker-layers-${{ github.sha }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-docker-layers-
+      # - name: Build postgres-compose-db image
+      #   run: |
+      #     docker build --file ./db/Dockerfile \
+      #       --tag postgres-compose-db:latest \
+      #       --cache-from type=local,src=/tmp/.docker-layers/ \
+      #       ./db
+
       - name: Cache Docker layers
         uses: actions/cache@v3
         with:
-          path: /tmp/.docker-layers/
+          path: /tmp/.docker-layers/postgres-compose-db.tar
           key: ${{ runner.os }}-docker-layers-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-docker-layers-
-
+      - name: Load Docker image from cache
+        run: |
+          if [ -f /tmp/.docker-layers/postgres-compose-db.tar ]; then
+            docker load -i /tmp/.docker-layers/postgres-compose-db.tar
+          fi
       - name: Build postgres-compose-db image
         run: |
           docker build --file ./db/Dockerfile \
             --tag postgres-compose-db:latest \
-            --cache-from type=local,src=/tmp/.docker-layers/ \
             ./db
+          docker save postgres-compose-db:latest -o /tmp/.docker-layers/postgres-compose-db.tar
 
       - name: Up docker-compose
         run: docker-compose -f docker-compose-db.yml -f docker-compose-psql.yml up -d
