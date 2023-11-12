@@ -1,0 +1,44 @@
+name: docker-compose run
+
+on:
+  pull_request:
+    branches: ["main"]
+
+env:
+  POSTGRES_USER: guest
+  POSTGRES_PASSWORD: guest
+  PGPASSWORD: guest
+  POSTGRES_DB: example
+
+jobs:
+  compose-run:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set permissions for log directory
+        run: chmod -R 777 ./dblog
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.docker-layers/
+          key: ${{ runner.os }}-docker-layers-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-layers-
+
+      - name: Build postgres-compose-db image
+        run: |
+          docker build --file ./db/Dockerfile \
+            --tag postgres-compose-db:latest \
+            --cache-from type=local,src=/tmp/.docker-layers/ \
+            ./db
+
+      - name: Up docker-compose
+        run: docker-compose -f docker-compose-db.yml -f docker-compose-psql.yml up -d
+
+      - name: Run psql
+        run: docker-compose -f docker-compose.yml -f docker-compose-psql.yml run --rm --entrypoint psql psql -h db -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT NOW();"
